@@ -5,7 +5,8 @@ requests
 python-multipart
 scikit-learn
 numpy
+pdfplumber
 PyPDF2
 python-docx
-pdfplumber
+pandas
 groq
