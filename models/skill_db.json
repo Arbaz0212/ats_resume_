@@ -1,0 +1,32 @@
+{
+  "python": ["python"],
+  "java": ["java"],
+  "javascript": ["javascript", "js"],
+  "c": ["c"],
+  "c++": ["c++", "cpp"],
+  "sql": ["sql", "mysql", "postgresql", "oracle"],
+
+  "manual testing": ["manual testing"],
+  "automation testing": ["automation testing"],
+  "regression testing": ["regression testing"],
+  "smoke testing": ["smoke testing"],
+  "integration testing": ["integration testing"],
+  "system testing": ["system testing"],
+  "api testing": ["api testing", "postman"],
+
+  "selenium": ["selenium"],
+  "jira": ["jira"],
+  "testng": ["testng"],
+  "cucumber": ["cucumber"],
+
+  "git": ["git"],
+  "github": ["github"],
+  "docker": ["docker"],
+  "linux": ["linux"],
+
+  "data analysis": ["data analysis", "data analytics"],
+  "data visualization": ["data visualization", "visualisation"],
+  "excel": ["excel"],
+  "power bi": ["power bi", "powerbi"],
+  "tableau": ["tableau"]
+}

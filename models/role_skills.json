@@ -1,0 +1,14 @@
+{
+  "qa_engineer": {
+    "skills": ["selenium", "api testing", "manual testing", "jira", "sql"],
+    "tools": ["postman", "jira"],
+
+    "section_weights": {
+      "skills": 35,
+      "experience": 30,
+      "projects": 20,
+      "education": 10,
+      "similarity": 5
+    }
+  }
+}
