@@ -1,7 +1,11 @@
 fastapi
 uvicorn
+streamlit
+requests
 python-multipart
 scikit-learn
 numpy
 PyPDF2
 python-docx
+pdfplumber
+groq
