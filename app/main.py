@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import pdfplumber
 
@@ -12,6 +13,18 @@ from app.core.ats_scorer import calculate_final_ats_score
 app = FastAPI(
     title="AI Powered ATS Resume Analyzer",
     version="2.0.0"
+)
+
+# ============================================================
+# CORS CONFIGURATION
+# ============================================================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # ============================================================
@@ -32,16 +45,22 @@ def extract_text_from_pdf(file: UploadFile) -> str:
 
     text = ""
 
-    file.file.seek(0)
+    try:
 
-    with pdfplumber.open(file.file) as pdf:
+        file.file.seek(0)
 
-        for page in pdf.pages:
+        with pdfplumber.open(file.file) as pdf:
 
-            page_text = page.extract_text()
+            for page in pdf.pages:
 
-            if page_text:
-                text += page_text + "\n"
+                page_text = page.extract_text()
+
+                if page_text:
+                    text += page_text + "\n"
+
+    except Exception as e:
+
+        print(f"PDF Extraction Error: {e}")
 
     return text.strip()
 
@@ -87,6 +106,27 @@ async def analyze_resumes(
 
             resume_text = extract_text_from_pdf(resume)
 
+            if not resume_text:
+
+                results.append({
+
+                    "candidate": resume.filename,
+
+                    "final_score": 0,
+
+                    "decision": "Error",
+
+                    "matched_skills": [],
+
+                    "missing_skills": [],
+
+                    "section_scores": {},
+
+                    "error": "Unable to extract text from PDF"
+                })
+
+                continue
+
             # ------------------------------------------------
             # CALCULATE ATS SCORE
             # ------------------------------------------------
@@ -97,7 +137,7 @@ async def analyze_resumes(
                 job_role=role
             )
 
-            final_score = ats_result["final_score"]
+            final_score = ats_result.get("final_score", 0)
 
             # ------------------------------------------------
             # BUILD RESPONSE
@@ -130,6 +170,8 @@ async def analyze_resumes(
             results.append(candidate_data)
 
         except Exception as e:
+
+            print(f"Resume Processing Error: {e}")
 
             results.append({
 

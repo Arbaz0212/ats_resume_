@@ -1,7 +1,15 @@
 import streamlit as st
 import requests
 
-API_URL = "https://ats-resume-backend-i5e5.onrender.com"
+# ============================================================
+# BACKEND API
+# ============================================================
+
+API_URL = "https://ats-resume-backend-i5e5.onrender.com/analyze"
+
+# ============================================================
+# PAGE CONFIG
+# ============================================================
 
 st.set_page_config(
     page_title="ATS Resume Analyzer",
@@ -9,11 +17,14 @@ st.set_page_config(
 )
 
 st.title("📄 ATS Resume Analyzer")
-st.caption("Upload resumes and analyze ATS score against Job Description")
 
-# ---------------------------
-# Job Description input
-# ---------------------------
+st.caption(
+    "Upload resumes and analyze ATS score against Job Description"
+)
+
+# ============================================================
+# JOB DESCRIPTION
+# ============================================================
 
 st.subheader("Job Description")
 
@@ -28,9 +39,9 @@ job_description = st.text_area(
     placeholder="Paste the complete job description here..."
 )
 
-# ---------------------------
-# Resume upload
-# ---------------------------
+# ============================================================
+# RESUME UPLOAD
+# ============================================================
 
 st.subheader("Upload Resumes")
 
@@ -40,48 +51,81 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True
 )
 
-# ---------------------------
-# Analyze button
-# ---------------------------
+# ============================================================
+# ANALYZE BUTTON
+# ============================================================
 
 if st.button("🚀 Analyze Resumes"):
 
-    if not job_role or not job_description or not uploaded_files:
+    # --------------------------------------------------------
+    # VALIDATION
+    # --------------------------------------------------------
 
-        st.error(
-            "Please provide Job Role, Job Description, and at least one resume."
-        )
+    if not job_role:
+
+        st.error("Please enter Job Role")
+
+    elif not job_description:
+
+        st.error("Please enter Job Description")
+
+    elif not uploaded_files:
+
+        st.error("Please upload at least one resume")
 
     else:
 
         with st.spinner("Analyzing resumes..."):
 
-            files = [
-                ("resumes", (file.name, file, "application/pdf"))
-                for file in uploaded_files
-            ]
-
-            data = {
-                "job_description": job_description,
-                "role": job_role.lower()
-            }
-
             try:
+
+                # ------------------------------------------------
+                # PREPARE FILES
+                # ------------------------------------------------
+
+                files = []
+
+                for file in uploaded_files:
+
+                    files.append(
+                        (
+                            "resumes",
+                            (
+                                file.name,
+                                file,
+                                "application/pdf"
+                            )
+                        )
+                    )
+
+                # ------------------------------------------------
+                # FORM DATA
+                # ------------------------------------------------
+
+                data = {
+                    "job_description": job_description,
+                    "role": job_role.lower()
+                }
+
+                # ------------------------------------------------
+                # API CALL
+                # ------------------------------------------------
 
                 response = requests.post(
                     API_URL,
                     files=files,
-                    data=data
+                    data=data,
+                    timeout=120
                 )
 
-                # ---------------------------------
-                # BACKEND ERROR
-                # ---------------------------------
+                # ------------------------------------------------
+                # HANDLE ERRORS
+                # ------------------------------------------------
 
                 if response.status_code != 200:
 
                     st.error(
-                        f"Backend error: {response.status_code}"
+                        f"Backend Error: {response.status_code}"
                     )
 
                     st.text(response.text)
@@ -90,26 +134,27 @@ if st.button("🚀 Analyze Resumes"):
 
                     result = response.json()
 
-                    # ---------------------------------
-                    # SAFE FALLBACKS
-                    # ---------------------------------
-
-                    shortlisted = result.get("shortlisted", [])
+                    shortlisted = result.get(
+                        "shortlisted",
+                        []
+                    )
 
                     all_candidates = result.get(
                         "all_candidates_ranked",
                         []
                     )
 
-                    # ---------------------------------
-                    # SUCCESS MESSAGE
-                    # ---------------------------------
+                    # --------------------------------------------
+                    # SUCCESS
+                    # --------------------------------------------
 
-                    st.success("Analysis completed successfully")
+                    st.success(
+                        "Analysis completed successfully"
+                    )
 
-                    # ---------------------------------
-                    # SUMMARY
-                    # ---------------------------------
+                    # --------------------------------------------
+                    # METRICS
+                    # --------------------------------------------
 
                     col1, col2, col3 = st.columns(3)
 
@@ -128,99 +173,114 @@ if st.button("🚀 Analyze Resumes"):
                         len(shortlisted)
                     )
 
-                    # ---------------------------------
-                    # SHORTLISTED CANDIDATES
-                    # ---------------------------------
+                    # --------------------------------------------
+                    # SHORTLISTED
+                    # --------------------------------------------
 
-                    st.subheader("✅ Shortlisted Candidates")
+                    st.subheader(
+                        "✅ Shortlisted Candidates"
+                    )
 
                     if not shortlisted:
 
-                        st.warning("No candidates shortlisted")
+                        st.warning(
+                            "No candidates shortlisted"
+                        )
 
                     else:
 
-                        for c in shortlisted:
+                        for candidate in shortlisted:
 
                             with st.expander(
-                                f"🟢 {c.get('candidate', 'Unknown')} "
-                                f"(Score: {c.get('final_score', 0)})"
+                                f"🟢 {candidate.get('candidate', 'Unknown')} "
+                                f"(Score: {candidate.get('final_score', 0)})"
                             ):
+
+                                st.write(
+                                    "**Decision:**",
+                                    candidate.get(
+                                        "decision",
+                                        "N/A"
+                                    )
+                                )
 
                                 st.write(
                                     "**Matched Skills:**",
                                     ", ".join(
-                                        c.get("matched_skills", [])
+                                        candidate.get(
+                                            "matched_skills",
+                                            []
+                                        )
                                     )
                                 )
 
                                 st.write(
                                     "**Missing Skills:**",
                                     ", ".join(
-                                        c.get("missing_skills", [])
+                                        candidate.get(
+                                            "missing_skills",
+                                            []
+                                        )
                                     )
                                 )
 
-                                # Recommendations
-                                recommendations = c.get(
-                                    "recommendations",
-                                    []
+                                st.write(
+                                    "### Section Scores"
                                 )
-
-                                if recommendations:
-
-                                    st.write("### Recommendations")
-
-                                    for rec in recommendations:
-                                        st.write(f"- {rec}")
 
                                 st.json(
-                                    c.get("section_scores", {})
+                                    candidate.get(
+                                        "section_scores",
+                                        {}
+                                    )
                                 )
 
-                    # ---------------------------------
+                    # --------------------------------------------
                     # ALL CANDIDATES
-                    # ---------------------------------
+                    # --------------------------------------------
 
-                    st.subheader("📊 All Candidates Ranking")
+                    st.subheader(
+                        "📊 All Candidates Ranking"
+                    )
 
-                    for c in all_candidates:
+                    for candidate in all_candidates:
 
                         with st.expander(
-                            f"{c.get('candidate', 'Unknown')} "
+                            f"{candidate.get('candidate', 'Unknown')} "
                             f"— "
-                            f"{c.get('decision', 'N/A')} "
-                            f"({c.get('final_score', 0)})"
+                            f"{candidate.get('decision', 'N/A')} "
+                            f"(Score: {candidate.get('final_score', 0)})"
                         ):
 
                             st.write(
                                 "**Matched Skills:**",
                                 ", ".join(
-                                    c.get("matched_skills", [])
+                                    candidate.get(
+                                        "matched_skills",
+                                        []
+                                    )
                                 )
                             )
 
                             st.write(
                                 "**Missing Skills:**",
                                 ", ".join(
-                                    c.get("missing_skills", [])
+                                    candidate.get(
+                                        "missing_skills",
+                                        []
+                                    )
                                 )
                             )
 
-                            recommendations = c.get(
-                                "recommendations",
-                                []
+                            st.write(
+                                "### Section Scores"
                             )
 
-                            if recommendations:
-
-                                st.write("### Recommendations")
-
-                                for rec in recommendations:
-                                    st.write(f"- {rec}")
-
                             st.json(
-                                c.get("section_scores", {})
+                                candidate.get(
+                                    "section_scores",
+                                    {}
+                                )
                             )
 
             except Exception as e:
