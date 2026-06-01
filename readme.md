@@ -1,205 +1,293 @@
-# ATS_RESUME_ANALYZER
-AI-Powered ATS Resume Screening System A production-ready Applicant Tracking System that automatically analyzes, scores, and ranks resumes against job descriptions using skill intelligence, semantic similarity, and weighted ATS logic. Built with FastAPI &amp; Streamlit to simulate real-world recruiter workflows.
-🚀 AI-Powered Applicant Tracking System (ATS)
+# 🚀 ATS Resume Analyzer
 
-Enterprise-grade resume screening & candidate ranking platform powered by AI
-Automatically analyzes, scores, ranks, and shortlists up to 1000 resumes at once against a job description with realistic ATS logic.
+> An AI-powered Applicant Tracking System (ATS) that automatically analyzes, scores, ranks, and shortlists resumes against job descriptions using intelligent skill matching, semantic similarity, and weighted ATS scoring.
 
-📌 Overview
+Built with **FastAPI** and **Streamlit**, this project simulates real-world enterprise ATS workflows used by recruiters and HR technology platforms.
 
-This project is a production-ready Applicant Tracking System (ATS) designed to simulate how real-world enterprise ATS platforms (used by MNCs, consulting firms, and HR tech companies) evaluate resumes.
+---
 
-The system intelligently processes large-scale resume inputs, extracts only validated skills, calculates accurate ATS scores, and automatically shortlists top candidates — eliminating manual screening and reducing recruiter bias.
+## 📖 Overview
 
-Unlike basic keyword-based ATS tools, this system focuses on accuracy, explainability, and scalability.
+Recruiters often spend hours manually reviewing hundreds of resumes for a single role.
 
-🎯 Why This ATS Is Different
+This project automates that process by evaluating resumes against a job description and generating realistic ATS scores based on multiple hiring factors.
 
-Most ATS systems fail due to:
+The system can process and rank up to **1000 resumes simultaneously**, helping recruiters identify the most relevant candidates in seconds.
 
-❌ Blind keyword matching
+Unlike traditional ATS systems that rely purely on keyword matching, this platform combines:
 
-❌ Unrealistic 100% scores
+- Skill Intelligence
+- Semantic Similarity Analysis
+- Experience Evaluation
+- Project Assessment
+- Education Scoring
 
-❌ English phrases treated as skills
+to generate transparent and explainable candidate rankings.
 
-❌ Manual skill configuration per job role
+---
 
-❌ No transparency in rejection reasons
+## 🎯 Problem Statement
 
-This system solves all of the above by design.
+Traditional ATS solutions suffer from several limitations:
 
-✨ Core Features
-🔍 Intelligent Resume Screening
+- Blind keyword matching
+- Inflated ATS scores
+- Poor explainability
+- False skill extraction
+- Role-specific hardcoding
+- Limited scalability
 
-Upload 1 to 1000 resumes at once
+These issues often result in qualified candidates being incorrectly rejected or poorly ranked.
 
-Supports batch processing for enterprise hiring
+---
 
-Automatically ranks candidates based on ATS score
+## 💡 Solution
 
-🧠 Job Description Driven Skill Matching
+This ATS uses a structured evaluation pipeline that:
 
-No hardcoded skills per role
+1. Parses the job description.
+2. Extracts validated skills.
+3. Processes resumes.
+4. Calculates semantic similarity.
+5. Evaluates experience and projects.
+6. Generates weighted ATS scores.
+7. Ranks and shortlists candidates automatically.
 
-Skills are derived directly from the job description
+This provides a more realistic simulation of modern recruitment workflows.
 
-Uses a strict skill whitelist database to prevent noise
+---
 
-Eliminates false positives like:
+# ✨ Key Features
 
-“work closely with team”
+### Resume Screening
 
-“basic understanding of business”
+- Upload single or multiple resumes
+- Supports bulk processing
+- Analyze up to 1000 resumes
+- Automatic candidate ranking
 
-“want hands-on exposure”
+### Intelligent Skill Matching
 
-✅ Accurate Skill Extraction
+- Job-description-driven skill extraction
+- No hardcoded role-specific skills
+- Validated skill database
+- Accurate matched and missing skills detection
 
-Extracts only real, validated skills
+### ATS Scoring Engine
 
-Supports:
+- Realistic ATS scores (0–100)
+- Weighted evaluation system
+- Section-wise scoring
+- Explainable hiring decisions
 
-Programming languages
+### Candidate Ranking
 
-QA tools
+- Automatic ranking
+- Configurable shortlisting thresholds
+- Transparent scoring logic
 
-Testing skills
+### Recruiter Dashboard
 
-Data & analytics skills
+- Interactive Streamlit interface
+- Resume upload portal
+- Ranking visualization
+- Candidate evaluation reports
 
-Development tools
+---
 
-Soft skills (controlled)
+# 🏗️ System Architecture
 
-🎯 Key Capabilities
+```text
+                         Job Description
+                                │
+                                ▼
+                    Skill Extraction Engine
+                                │
+                                ▼
+                         Skill Database
+                                │
+                                ▼
+                     Resume Processing Layer
+                                │
+          ┌─────────────────────┼─────────────────────┐
+          │                     │                     │
+          ▼                     ▼                     ▼
+   Skill Matching      Similarity Analysis   Resume Parsing
+          │                     │                     │
+          └─────────────────────┼─────────────────────┘
+                                ▼
+                      ATS Scoring Engine
+                                │
+                                ▼
+                      Candidate Ranking
+                                │
+                                ▼
+                       Shortlisting System
+                                │
+                                ▼
+                         Streamlit UI
+```
 
-✅ Upload single or multiple resumes (up to 1000 at once)
+---
 
-✅ Job-description-driven skill extraction (no hardcoded skills per role)
+# 🧠 ATS Evaluation Logic
 
-✅ Accurate matched & missing skills detection
+Each resume is evaluated across multiple dimensions.
 
-✅ Realistic ATS score (0–100) with float precision
+## Skills Match (35%)
 
-✅ Section-wise scoring:
+Measures how many required job skills are present within the resume.
 
-Skills
+---
 
-Semantic similarity
+## Semantic Similarity (25%)
 
-Experience
+Calculates contextual similarity between:
 
-Projects
+```text
+Job Description
+        vs
+Resume Content
+```
 
-Education
+This prevents candidates from gaming the system through keyword stuffing.
 
-✅ Automatic candidate ranking & shortlisting
+---
 
-✅ Recruiter-friendly Streamlit UI
+## Experience Score (20%)
 
-✅ Production-ready FastAPI backend
+Evaluates:
 
-📊 Realistic ATS Scoring (0–100)
+- Years of experience
+- Relevance of experience
+- Industry alignment
 
-Each resume receives a float-based ATS score, not a binary pass/fail.
+---
 
-Section-wise weighted evaluation:
-Section	Weight
-Skills Match	35%
-JD Similarity	25%
-Experience	20%
-Projects	10%
-Education	10%
+## Project Score (10%)
 
-This mirrors real hiring system logic used in enterprise recruitment.
+Measures:
 
-🧮 Section Score Breakdown
+- Technical depth
+- Project relevance
+- Demonstrated skills
 
-For every candidate, the system provides:
+---
 
-Final ATS Score
+## Education Score (10%)
 
-Matched Skills
+Evaluates:
 
-Missing Skills
+- Degree relevance
+- Academic qualifications
+- Educational alignment
 
-Detailed section scores
+---
 
-Hire / Reject decision
+# 📊 ATS Score Formula
 
-📌 This makes the system fully explainable and auditable.
+```text
+Final Score =
+(0.35 × Skills Score)
++ (0.25 × Similarity Score)
++ (0.20 × Experience Score)
++ (0.10 × Project Score)
++ (0.10 × Education Score)
+```
 
-🏆 Automatic Shortlisting
+This produces realistic ATS scores ranging from:
 
-Configurable shortlisting threshold (e.g. 80+ ATS score)
+```text
+0 → 100
+```
 
-Only top candidates are shortlisted
+---
 
-All candidates are ranked for transparency
+# 📂 Project Structure
 
-🖥️ Recruiter-Friendly Streamlit UI
-
-Clean, professional interface
-
-Upload resumes & job description
-
-View rankings instantly
-
-No technical knowledge required
-
-⚙️ Scalable Backend Architecture
-
-Built with FastAPI
-
-Modular design
-
-Easy to integrate with:
-
-HR portals
-
-Hiring dashboards
-
-Cloud infrastructure
-
-🧠 How the ATS Thinks (Logic Flow)
-
-Job Description Parsing
-
-Skill normalization using skill database
-
-Resume skill extraction
-
-Skill match ratio calculation
-
-Semantic similarity analysis
-
-Experience & project scoring
-
-Weighted ATS score generation
-
-Ranking & shortlisting
-
-📂 Project Architecture
-ATS_RESUME/
+```text
+ATS_RESUME_ANALYZER/
 │
 ├── app/
+│   │
 │   ├── core/
-│   │   ├── section_parser.py      # Skill extraction & matching logic
-│   │   ├── similarity.py          # JD-resume similarity scoring
-│   │   ├── ats_scorer.py           # Final ATS scoring logic
-│   │   └── resume_parser.py        # Experience, projects, education
+│   │   ├── ats_scorer.py
+│   │   ├── similarity.py
+│   │   ├── resume_parser.py
+│   │   └── section_parser.py
 │   │
 │   ├── models/
-│   │   └── skill_db.json           # Valid skill database
+│   │   └── skill_db.json
 │   │
-│   ├── main.py                     # FastAPI entry point
+│   └── main.py
 │
-├── streamlit_app.py                # Recruiter UI
+├── streamlit_app.py
 ├── requirements.txt
 └── README.md
+```
 
-🧪 Example Output
+---
+
+# ⚙️ Tech Stack
+
+## Backend
+
+- FastAPI
+- Python
+
+## Frontend
+
+- Streamlit
+
+## NLP & AI
+
+- Semantic Similarity Analysis
+- Skill Extraction Engine
+- ATS Scoring Algorithm
+
+## Data Processing
+
+- Regex
+- Text Parsing
+- Skill Normalization
+
+---
+
+# 🔄 Workflow
+
+```text
+Job Description
+        │
+        ▼
+Skill Extraction
+        │
+        ▼
+Resume Parsing
+        │
+        ▼
+Skill Matching
+        │
+        ▼
+Semantic Similarity
+        │
+        ▼
+Section-wise Scoring
+        │
+        ▼
+Final ATS Score
+        │
+        ▼
+Candidate Ranking
+        │
+        ▼
+Shortlisting
+```
+
+---
+
+# 🧪 Sample Output
+
+```json
 {
   "candidate": "QA_Engineer_Resume.pdf",
   "final_score": 80.63,
@@ -220,61 +308,101 @@ ATS_RESUME/
     "education": 80
   }
 }
+```
 
-🛠️ Tech Stack
+---
 
-Language: Python
+# 🎯 Business Impact
 
-Backend: FastAPI
+This project demonstrates practical applications of:
 
-Frontend: Streamlit
+- AI-powered recruitment automation
+- Resume intelligence systems
+- Semantic search
+- Candidate ranking algorithms
+- Explainable AI workflows
+- Enterprise ATS design
 
-NLP: Regex + semantic similarity
+---
 
-Architecture: Modular & scalable
+# 🚀 Installation
 
-🚀 How to Run the Project
-1️⃣ Install dependencies
+## Clone Repository
+
+```bash
+git clone <repository-url>
+cd ATS_RESUME_ANALYZER
+```
+
+---
+
+## Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-2️⃣ Start backend
+---
+
+## Start FastAPI Backend
+
+```bash
 uvicorn app.main:app --reload
+```
 
-3️⃣ Launch UI
+Backend:
+
+```text
+http://localhost:8000
+```
+
+---
+
+## Launch Streamlit UI
+
+```bash
 streamlit run streamlit_app.py
+```
 
-🎓 Use Cases
+Frontend:
 
-Enterprise resume screening
+```text
+http://localhost:8501
+```
 
-Campus hiring automation
+---
 
-HR tech platforms
+# 🎓 Use Cases
 
-ATS compatibility testing
+- Enterprise Hiring
+- Campus Recruitment
+- HR Tech Platforms
+- Resume Screening Automation
+- Candidate Ranking Systems
+- ATS Compatibility Analysis
 
-AI-powered recruitment research
+---
 
-📈 Future Enhancements
+# 📈 Future Enhancements
 
-Role-based dynamic weighting
+- Resume Improvement Suggestions
+- Skill Gap Analysis
+- Recruiter Analytics Dashboard
+- Role-Specific Dynamic Weighting
+- Cloud Deployment
+- Multi-Language Resume Support
+- LLM-Based Candidate Insights
 
-Resume improvement recommendations
+---
 
-Skill gap visualization
+# 👨‍💻 Author
 
-Cloud deployment (AWS / Azure)
+**Arbaz**
 
-Admin dashboard for recruiters
+AI Engineer | Backend Developer | Generative AI Enthusiast
 
-🏁 Final Note
+GitHub: https://github.com/Arbaz0212
 
-This project demonstrates real-world ATS logic, clean backend engineering, and practical AI application in recruitment technology — making it a high-value portfolio project for roles in:
+---
 
-AI / ML Engineering
-
-Backend Development
-
-Automation Engineering
-
-HR Tech Platforms
+# ⭐ If you found this project useful, consider giving it a star.
